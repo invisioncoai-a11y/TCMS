@@ -1,2 +1,3 @@
-# CAMSS
-Clinic-Appointment-Management-System-SQLServer
+# TCMS
+Training Courses Management System
+
