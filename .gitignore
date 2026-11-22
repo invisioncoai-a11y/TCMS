@@ -1,0 +1,38 @@
+# ====================================================================
+# .gitignore: Training Courses Management System
+# ====================================================================
+
+# Build and Binary Outputs (.NET)
+bin/
+obj/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+Debug/
+Release/
+
+# Frontend (Node / Angular)
+node_modules/
+dist/
+.angular/
+.vscode/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Secrets and Local Configurations
+*.credentials.json
+*.credentials.txt
+*.secret
+secrets/
+appsettings.local.json
+
+# Operating System & Editors
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+*.log
+*.tmp

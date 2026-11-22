@@ -1,0 +1,144 @@
+<div class="container page-container">
+  <div class="page-header">
+    <h1 class="page-title">My Registrations Portal</h1>
+    <p class="page-subtitle">Track your registered courses, attendance statuses, schedules, and manage seat reservations</p>
+  </div>
+
+  <!-- Search Card -->
+  <div class="card search-card">
+    <label class="form-label">Lookup Enrollments by Trainee Email</label>
+    <div class="search-input-row">
+      <input
+        type="email"
+        [(ngModel)]="email"
+        (keyup.enter)="onSearch()"
+        placeholder="Enter your student email (e.g. alice.walker@example.com)..."
+        class="form-control"
+      />
+      <button (click)="onSearch()" class="btn btn-primary" [disabled]="loading">
+        {{ loading ? 'Searching...' : 'Search Enrollments' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Feedback Alerts -->
+  <div class="alert alert-success" *ngIf="successMessage">{{ successMessage }}</div>
+  <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <!-- Registrations Results Table -->
+  <div class="card" *ngIf="searched">
+    <div class="card-header-bar">
+      <h3 class="section-card-title">Enrollment History for {{ email }}</h3>
+      <span class="badge badge-primary">{{ registrations.length }} Total Record(s)</span>
+    </div>
+
+    <div class="table-responsive mt-3" *ngIf="registrations.length > 0; else noRegsTpl">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Reg ID</th>
+            <th>Course Title</th>
+            <th>Instructor</th>
+            <th>Cohort Dates</th>
+            <th>Schedule</th>
+            <th>Tuition</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reg of registrations">
+            <td class="font-bold">#{{ reg.registrationID }}</td>
+            <td>
+              <a [routerLink]="['/courses', reg.courseID]" class="font-bold course-link">
+                {{ reg.courseName }}
+              </a>
+              <div class="text-muted text-sm">Mode: {{ reg.deliveryMode }}</div>
+            </td>
+            <td>
+              <span>{{ reg.trainerName }}</span>
+            </td>
+            <td>
+              <div>{{ reg.startDate | date:'mediumDate' }}</div>
+              <div class="text-muted text-sm">to {{ reg.endDate | date:'mediumDate' }}</div>
+            </td>
+            <td>
+              <span class="text-sm">{{ reg.scheduleDetails }}</span>
+            </td>
+            <td class="font-bold text-success">${{ reg.price | number:'1.2-2' }}</td>
+            <td>
+              <span
+                class="badge"
+                [ngClass]="{
+                  'badge-success': reg.status === 'Confirmed',
+                  'badge-warning': reg.status === 'Pending',
+                  'badge-danger': reg.status === 'Cancelled'
+                }"
+              >
+                {{ reg.status }}
+              </span>
+              <div class="text-danger text-sm" *ngIf="reg.status === 'Cancelled' && reg.cancellationReason">
+                Reason: {{ reg.cancellationReason }}
+              </div>
+            </td>
+            <td>
+              <button
+                *ngIf="reg.isCancellable === 1"
+                (click)="openCancelModal(reg)"
+                class="btn btn-danger btn-sm"
+              >
+                Cancel Seat
+              </button>
+              <span *ngIf="reg.isCancellable === 0 && reg.status !== 'Cancelled'" class="text-muted text-sm">
+                Started / Non-cancellable
+              </span>
+              <span *ngIf="reg.status === 'Cancelled'" class="text-muted text-sm">
+                Cancelled
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noRegsTpl>
+      <div class="empty-state text-center">
+        <h4 class="font-bold">No Enrollments Found</h4>
+        <p class="text-muted">No registration records found for email "{{ email }}".</p>
+        <a routerLink="/courses" class="btn btn-primary mt-3">Browse Courses to Enroll</a>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Cancel Confirmation Modal -->
+  <div class="modal-backdrop" *ngIf="selectedRegForCancel">
+    <div class="modal-card card">
+      <h3 class="modal-title text-danger">Cancel Registration</h3>
+      <p class="modal-desc">
+        Are you sure you want to cancel your enrollment in
+        <strong>{{ selectedRegForCancel.courseName }}</strong> (Cohort starting on {{ selectedRegForCancel.startDate | date:'mediumDate' }})?
+      </p>
+      <p class="text-muted text-sm mb-3">
+        Cancelling will immediately restore your seat into the available course pool.
+      </p>
+
+      <div class="form-group">
+        <label class="form-label">Reason for Cancellation *</label>
+        <textarea
+          [(ngModel)]="cancelReason"
+          rows="3"
+          class="form-control"
+          placeholder="Please state your reason for cancellation..."
+          required
+        ></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button (click)="closeCancelModal()" class="btn btn-outline" [disabled]="cancelling">Keep Registration</button>
+        <button (click)="confirmCancel()" class="btn btn-danger" [disabled]="cancelling">
+          {{ cancelling ? 'Cancelling...' : 'Confirm Cancellation' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

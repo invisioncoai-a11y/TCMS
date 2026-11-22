@@ -1,0 +1,176 @@
+<div class="container page-container">
+  <!-- Dashboard Top Bar -->
+  <div class="dashboard-header-bar">
+    <div>
+      <h1 class="page-title">Executive Admin Dashboard</h1>
+      <p class="page-subtitle">Real-time telemetry, enrollment KPIs, and analytics from Oracle 19c FINALPDB</p>
+    </div>
+    <div class="header-actions">
+      <a routerLink="/admin/manage" class="btn btn-primary">Open CRUD Management Console &rarr;</a>
+    </div>
+  </div>
+
+  <!-- KPI Metric Cards Grid -->
+  <div class="kpi-grid" *ngIf="kpis">
+    <div class="card kpi-card">
+      <div class="kpi-icon icon-blue">📚</div>
+      <div class="kpi-info">
+        <span class="kpi-val">{{ kpis.totalCourses }}</span>
+        <span class="kpi-lbl">Master Courses</span>
+      </div>
+    </div>
+
+    <div class="card kpi-card">
+      <div class="kpi-icon icon-green">🗓️</div>
+      <div class="kpi-info">
+        <span class="kpi-val">{{ kpis.totalOfferings }}</span>
+        <span class="kpi-lbl">Total Cohorts ({{ kpis.activeOfferings }} Active)</span>
+      </div>
+    </div>
+
+    <div class="card kpi-card">
+      <div class="kpi-icon icon-purple">👨‍🏫</div>
+      <div class="kpi-info">
+        <span class="kpi-val">{{ kpis.totalTrainers }}</span>
+        <span class="kpi-lbl">Certified Trainers</span>
+      </div>
+    </div>
+
+    <div class="card kpi-card">
+      <div class="kpi-icon icon-amber">🎓</div>
+      <div class="kpi-info">
+        <span class="kpi-val">{{ kpis.totalTrainees }}</span>
+        <span class="kpi-lbl">Registered Students</span>
+      </div>
+    </div>
+
+    <div class="card kpi-card">
+      <div class="kpi-icon icon-cyan">📝</div>
+      <div class="kpi-info">
+        <span class="kpi-val">{{ kpis.totalRegistrations }}</span>
+        <span class="kpi-lbl">Total Registrations</span>
+      </div>
+    </div>
+
+    <div class="card kpi-card">
+      <div class="kpi-icon icon-emerald">💰</div>
+      <div class="kpi-info">
+        <span class="kpi-val text-success">${{ kpis.totalRevenue | number:'1.2-2' }}</span>
+        <span class="kpi-lbl">Total Confirmed Tuition</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visual Analytics Section -->
+  <div class="analytics-layout mt-4">
+    <!-- Chart.js Registrations by Category -->
+    <div class="card chart-card">
+      <div class="chart-header">
+        <div>
+          <h3 class="section-card-title">Enrollments by Course Category</h3>
+          <p class="text-muted text-sm">Visual distribution of confirmed registrations across training domains</p>
+        </div>
+      </div>
+      <div class="chart-wrapper">
+        <canvas #categoryCanvas></canvas>
+      </div>
+    </div>
+
+    <!-- Quick Management Launchpad -->
+    <div class="card launchpad-card">
+      <h3 class="section-card-title">Governance Shortcuts</h3>
+      <div class="launchpad-list">
+        <a routerLink="/admin/manage" [queryParams]="{tab: 'courses'}" class="launchpad-item">
+          <span class="lp-icon">📘</span>
+          <div class="lp-info">
+            <span class="lp-title">Manage Courses</span>
+            <span class="lp-sub">Add or modify course syllabi &amp; tuition</span>
+          </div>
+          <span class="lp-arrow">&rarr;</span>
+        </a>
+
+        <a routerLink="/admin/manage" [queryParams]="{tab: 'offerings'}" class="launchpad-item">
+          <span class="lp-icon">📅</span>
+          <div class="lp-info">
+            <span class="lp-title">Manage Class Offerings</span>
+            <span class="lp-sub">Schedule cohorts, dates &amp; seat capacities</span>
+          </div>
+          <span class="lp-arrow">&rarr;</span>
+        </a>
+
+        <a routerLink="/admin/manage" [queryParams]="{tab: 'registrations'}" class="launchpad-item">
+          <span class="lp-icon">📋</span>
+          <div class="lp-info">
+            <span class="lp-title">Manage Registrations</span>
+            <span class="lp-sub">Approve, cancel, or audit trainee statuses</span>
+          </div>
+          <span class="lp-arrow">&rarr;</span>
+        </a>
+
+        <a routerLink="/admin/manage" [queryParams]="{tab: 'trainers'}" class="launchpad-item">
+          <span class="lp-icon">🧑‍💼</span>
+          <div class="lp-info">
+            <span class="lp-title">Manage Trainers</span>
+            <span class="lp-sub">Assign faculty credentials &amp; contact profiles</span>
+          </div>
+          <span class="lp-arrow">&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Registrations Ledger -->
+  <div class="card mt-4">
+    <div class="card-header-bar">
+      <div>
+        <h3 class="section-card-title">Recent Trainee Registrations</h3>
+        <p class="text-muted text-sm">Latest enrollment audit transactions recorded in Oracle 19c</p>
+      </div>
+      <a routerLink="/admin/manage" [queryParams]="{tab: 'registrations'}" class="btn btn-outline btn-sm">
+        View All Registrations
+      </a>
+    </div>
+
+    <div class="table-responsive mt-3" *ngIf="recentRegistrations.length > 0; else noRecentTpl">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Reg ID</th>
+            <th>Trainee Name</th>
+            <th>Email</th>
+            <th>Course</th>
+            <th>Offering Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reg of recentRegistrations">
+            <td class="font-bold">#{{ reg.registrationID }}</td>
+            <td class="font-bold">{{ reg.traineeName }}</td>
+            <td class="text-muted">{{ reg.traineeEmail }}</td>
+            <td>{{ reg.courseName }}</td>
+            <td>{{ reg.startDate | date:'shortDate' }}</td>
+            <td>
+              <span
+                class="badge"
+                [ngClass]="{
+                  'badge-success': reg.status === 'Confirmed',
+                  'badge-warning': reg.status === 'Pending',
+                  'badge-danger': reg.status === 'Cancelled'
+                }"
+              >
+                {{ reg.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noRecentTpl>
+      <div class="empty-state text-center">
+        <p class="text-muted">No registration transactions logged yet.</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

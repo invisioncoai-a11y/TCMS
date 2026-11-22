@@ -1,0 +1,399 @@
+<div class="container page-container">
+  <div class="page-header">
+    <h1 class="page-title">Enterprise Management Console</h1>
+    <p class="page-subtitle">Full administrative CRUD governance for training courses, cohorts, faculty, and enrollments</p>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="tabs-bar">
+    <button class="tab-btn" [class.active]="activeTab === 'courses'" (click)="setTab('courses')">Courses ({{ courses.length }})</button>
+    <button class="tab-btn" [class.active]="activeTab === 'offerings'" (click)="setTab('offerings')">Offerings ({{ offerings.length }})</button>
+    <button class="tab-btn" [class.active]="activeTab === 'categories'" (click)="setTab('categories')">Categories ({{ categories.length }})</button>
+    <button class="tab-btn" [class.active]="activeTab === 'trainers'" (click)="setTab('trainers')">Trainers ({{ trainers.length }})</button>
+    <button class="tab-btn" [class.active]="activeTab === 'registrations'" (click)="setTab('registrations')">Registrations ({{ registrations.length }})</button>
+    <button class="tab-btn" [class.active]="activeTab === 'trainees'" (click)="setTab('trainees')">Students ({{ trainees.length }})</button>
+  </div>
+
+  <!-- Global Alerts -->
+  <div class="alert alert-success" *ngIf="successMessage">{{ successMessage }}</div>
+  <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <!-- ==================== TAB 1: COURSES ==================== -->
+  <div class="tab-content card" *ngIf="activeTab === 'courses'">
+    <div class="tab-header-row">
+      <h3 class="section-card-title">Master Courses Repository</h3>
+      <button (click)="openNewCourseModal()" class="btn btn-primary">+ Add New Course</button>
+    </div>
+
+    <div class="table-responsive mt-3">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Course Title</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Duration</th>
+            <th>Delivery Mode</th>
+            <th>Featured</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of courses">
+            <td>#{{ c.courseID }}</td>
+            <td class="font-bold">{{ c.courseName }}</td>
+            <td><span class="badge badge-primary">{{ c.categoryName }}</span></td>
+            <td class="font-bold text-success">${{ c.price | number:'1.2-2' }}</td>
+            <td>{{ c.duration }}h</td>
+            <td>{{ c.deliveryMode }}</td>
+            <td>
+              <span class="badge" [ngClass]="c.isFeatured === 1 ? 'badge-warning' : 'badge-gray'">
+                {{ c.isFeatured === 1 ? 'Featured' : 'Standard' }}
+              </span>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button (click)="openEditCourseModal(c)" class="btn btn-outline btn-sm">Edit</button>
+                <button (click)="deleteCourse(c.courseID)" class="btn btn-danger btn-sm">Delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== TAB 2: OFFERINGS ==================== -->
+  <div class="tab-content card" *ngIf="activeTab === 'offerings'">
+    <div class="tab-header-row">
+      <h3 class="section-card-title">Scheduled Class Offerings &amp; Cohorts</h3>
+      <button (click)="openNewOfferingModal()" class="btn btn-primary">+ Schedule New Offering</button>
+    </div>
+
+    <div class="table-responsive mt-3">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Course Title</th>
+            <th>Instructor</th>
+            <th>Dates</th>
+            <th>Schedule</th>
+            <th>Capacity &amp; Seats</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let o of offerings">
+            <td>#{{ o.offeringID }}</td>
+            <td class="font-bold">{{ o.courseName }}</td>
+            <td>{{ o.trainerName }}</td>
+            <td>{{ o.startDate | date:'shortDate' }} - {{ o.endDate | date:'shortDate' }}</td>
+            <td>{{ o.scheduleDetails }}</td>
+            <td>
+              <span class="badge badge-primary">{{ o.availableSeats }} / {{ o.maxCapacity }} Seats</span>
+            </td>
+            <td>
+              <button (click)="deleteOffering(o.offeringID)" class="btn btn-danger btn-sm">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== TAB 3: CATEGORIES ==================== -->
+  <div class="tab-content card" *ngIf="activeTab === 'categories'">
+    <div class="tab-header-row">
+      <h3 class="section-card-title">Training Subject Categories</h3>
+      <button (click)="openNewCategoryModal()" class="btn btn-primary">+ Add New Category</button>
+    </div>
+
+    <div class="table-responsive mt-3">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Category Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cat of categories">
+            <td>#{{ cat.categoryID }}</td>
+            <td class="font-bold">{{ cat.categoryName }}</td>
+            <td class="text-muted">{{ cat.description }}</td>
+            <td>
+              <button (click)="deleteCategory(cat.categoryID)" class="btn btn-danger btn-sm">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== TAB 4: TRAINERS ==================== -->
+  <div class="tab-content card" *ngIf="activeTab === 'trainers'">
+    <div class="tab-header-row">
+      <h3 class="section-card-title">Certified Instructors &amp; Faculty</h3>
+    </div>
+
+    <div class="table-responsive mt-3">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Specialization</th>
+            <th>Qualifications</th>
+            <th>Email</th>
+            <th>Phone</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of trainers">
+            <td>#{{ t.trainerID }}</td>
+            <td class="font-bold">{{ t.fullName }}</td>
+            <td><span class="badge badge-primary">{{ t.specialization }}</span></td>
+            <td>{{ t.qualifications }}</td>
+            <td>{{ t.email }}</td>
+            <td>{{ t.phoneNumber }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== TAB 5: REGISTRATIONS ==================== -->
+  <div class="tab-content card" *ngIf="activeTab === 'registrations'">
+    <div class="tab-header-row">
+      <h3 class="section-card-title">All Trainee Registrations (Master Ledger)</h3>
+    </div>
+
+    <div class="table-responsive mt-3">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Reg ID</th>
+            <th>Trainee Name</th>
+            <th>Email</th>
+            <th>Course</th>
+            <th>Offering Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of registrations">
+            <td>#{{ r.registrationID }}</td>
+            <td class="font-bold">{{ r.traineeName }}</td>
+            <td>{{ r.traineeEmail }}</td>
+            <td>{{ r.courseName }}</td>
+            <td>{{ r.startDate | date:'shortDate' }}</td>
+            <td>
+              <span
+                class="badge"
+                [ngClass]="{
+                  'badge-success': r.status === 'Confirmed',
+                  'badge-warning': r.status === 'Pending',
+                  'badge-danger': r.status === 'Cancelled'
+                }"
+              >
+                {{ r.status }}
+              </span>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button
+                  *ngIf="r.status !== 'Confirmed'"
+                  (click)="updateRegistrationStatus(r.registrationID, 'Confirmed')"
+                  class="btn btn-outline btn-sm"
+                >
+                  Confirm
+                </button>
+                <button
+                  *ngIf="r.status !== 'Cancelled'"
+                  (click)="cancelRegistrationByAdmin(r.registrationID)"
+                  class="btn btn-danger btn-sm"
+                >
+                  Cancel &amp; Restore
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== TAB 6: TRAINEES ==================== -->
+  <div class="tab-content card" *ngIf="activeTab === 'trainees'">
+    <div class="tab-header-row">
+      <h3 class="section-card-title">Student &amp; Attendee Master Directory</h3>
+    </div>
+
+    <div class="table-responsive mt-3">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Student Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Educational Background</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let tr of trainees">
+            <td>#{{ tr.traineeID }}</td>
+            <td class="font-bold">{{ tr.fullName }}</td>
+            <td>{{ tr.email }}</td>
+            <td>{{ tr.phoneNumber }}</td>
+            <td>{{ tr.educationalBackground }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== MODALS ==================== -->
+  <!-- Course Modal -->
+  <div class="modal-backdrop" *ngIf="showCourseModal">
+    <div class="modal-card card modal-lg">
+      <h3 class="modal-title">{{ editingCourseId ? 'Edit Course' : 'Create New Course' }}</h3>
+      <form (ngSubmit)="saveCourse()">
+        <div class="form-group">
+          <label class="form-label">Course Title *</label>
+          <input type="text" [(ngModel)]="courseForm.courseName" name="courseName" class="form-control" required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="form-label">Category *</label>
+            <select [(ngModel)]="courseForm.categoryID" name="categoryID" class="form-control" required>
+              <option *ngFor="let cat of categories" [value]="cat.categoryID">{{ cat.categoryName }}</option>
+            </select>
+          </div>
+          <div class="form-group flex-1">
+            <label class="form-label">Tuition Fee ($) *</label>
+            <input type="number" [(ngModel)]="courseForm.price" name="price" class="form-control" required min="0" />
+          </div>
+          <div class="form-group flex-1">
+            <label class="form-label">Duration (Hours) *</label>
+            <input type="number" [(ngModel)]="courseForm.duration" name="duration" class="form-control" required min="1" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="form-label">Delivery Mode *</label>
+            <select [(ngModel)]="courseForm.deliveryMode" name="deliveryMode" class="form-control">
+              <option value="Online">Online</option>
+              <option value="In-Person">In-Person</option>
+              <option value="Hybrid">Hybrid</option>
+              <option value="Classroom">Classroom</option>
+            </select>
+          </div>
+          <div class="form-group flex-1">
+            <label class="form-label">Featured on Home Page?</label>
+            <select [(ngModel)]="courseForm.isFeatured" name="isFeatured" class="form-control">
+              <option [value]="1">Yes (Featured)</option>
+              <option [value]="0">No (Standard)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description / Overview</label>
+          <textarea [(ngModel)]="courseForm.description" name="description" rows="3" class="form-control"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Learning Objectives</label>
+          <textarea [(ngModel)]="courseForm.learningObjectives" name="learningObjectives" rows="2" class="form-control"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Prerequisites</label>
+          <input type="text" [(ngModel)]="courseForm.prerequisites" name="prerequisites" class="form-control" />
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" (click)="showCourseModal = false" class="btn btn-outline">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Course</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Offering Modal -->
+  <div class="modal-backdrop" *ngIf="showOfferingModal">
+    <div class="modal-card card">
+      <h3 class="modal-title">Schedule New Course Offering</h3>
+      <form (ngSubmit)="saveOffering()">
+        <div class="form-group">
+          <label class="form-label">Course *</label>
+          <select [(ngModel)]="offeringForm.courseID" name="courseID" class="form-control" required>
+            <option *ngFor="let c of courses" [value]="c.courseID">{{ c.courseName }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Instructor *</label>
+          <select [(ngModel)]="offeringForm.trainerID" name="trainerID" class="form-control" required>
+            <option *ngFor="let t of trainers" [value]="t.trainerID">{{ t.fullName }} ({{ t.specialization }})</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="form-label">Start Date *</label>
+            <input type="date" [(ngModel)]="offeringForm.startDate" name="startDate" class="form-control" required />
+          </div>
+          <div class="form-group flex-1">
+            <label class="form-label">End Date *</label>
+            <input type="date" [(ngModel)]="offeringForm.endDate" name="endDate" class="form-control" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Schedule Details *</label>
+          <input type="text" [(ngModel)]="offeringForm.scheduleDetails" name="scheduleDetails" class="form-control" placeholder="e.g. Mon, Wed, Fri (18:00 - 21:00)" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Maximum Seat Capacity *</label>
+          <input type="number" [(ngModel)]="offeringForm.maxCapacity" name="maxCapacity" class="form-control" required min="1" />
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" (click)="showOfferingModal = false" class="btn btn-outline">Cancel</button>
+          <button type="submit" class="btn btn-primary">Schedule Offering</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Category Modal -->
+  <div class="modal-backdrop" *ngIf="showCategoryModal">
+    <div class="modal-card card">
+      <h3 class="modal-title">Create New Category</h3>
+      <form (ngSubmit)="saveCategory()">
+        <div class="form-group">
+          <label class="form-label">Category Name *</label>
+          <input type="text" [(ngModel)]="categoryForm.categoryName" name="categoryName" class="form-control" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea [(ngModel)]="categoryForm.description" name="description" rows="3" class="form-control"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" (click)="showCategoryModal = false" class="btn btn-outline">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

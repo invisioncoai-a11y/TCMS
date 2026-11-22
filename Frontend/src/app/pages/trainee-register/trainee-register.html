@@ -1,0 +1,42 @@
+<div class="container page-container">
+  <div class="register-card card">
+    <div class="text-center mb-4">
+      <h1 class="page-title">Trainee Registration</h1>
+      <p class="page-subtitle">Create your student profile to streamline course enrollment and certifications</p>
+    </div>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+    <div class="alert alert-success" *ngIf="successMessage">{{ successMessage }}</div>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label class="form-label">Full Name *</label>
+        <input type="text" [(ngModel)]="fullName" name="fullName" class="form-control" placeholder="e.g. Alice Walker" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email Address *</label>
+        <input type="email" [(ngModel)]="email" name="email" class="form-control" placeholder="e.g. alice@example.com" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Phone Number *</label>
+        <input type="tel" [(ngModel)]="phoneNumber" name="phoneNumber" class="form-control" placeholder="e.g. +1-555-1001" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Educational &amp; Professional Background *</label>
+        <textarea [(ngModel)]="educationalBackground" name="educationalBackground" rows="3" class="form-control" placeholder="e.g. B.Sc. IT, Software Engineer" required></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg w-100 mt-3" [disabled]="submitting">
+        {{ submitting ? 'Registering...' : 'Complete Trainee Registration' }}
+      </button>
+
+      <div class="text-center mt-3">
+        <span class="text-muted text-sm">Already enrolled? </span>
+        <a routerLink="/my-registrations" class="font-medium text-sm">Check My Registrations</a>
+      </div>
+    </form>
+  </div>
+</div>

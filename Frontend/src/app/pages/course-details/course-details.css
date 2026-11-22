@@ -1,0 +1,129 @@
+.breadcrumb-bar {
+  margin-bottom: 20px;
+}
+
+.breadcrumb-bar a {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.header-banner {
+  padding: 36px;
+  margin-bottom: 30px;
+  background: #ffffff;
+}
+
+.banner-top {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.delivery-pill {
+  font-size: 12px;
+  font-weight: 600;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.featured-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: #b45309;
+  background: #fef3c7;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.course-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.3;
+  margin-bottom: 14px;
+}
+
+.course-intro {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 28px;
+  max-width: 900px;
+}
+
+.banner-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+}
+
+.b-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.b-stat-lbl {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text-light);
+  font-weight: 600;
+}
+
+.b-stat-val {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 4px;
+}
+
+.price-val {
+  font-size: 24px;
+  color: #059669;
+}
+
+.mb-4 {
+  margin-bottom: 24px;
+}
+
+.section-card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 14px;
+}
+
+.text-content {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #334155;
+  white-space: pre-line;
+}
+
+.text-sm {
+  font-size: 12px;
+}
+
+.offering-header {
+  margin-bottom: 20px;
+}
+
+.trainer-link {
+  color: #0f172a;
+}
+
+.trainer-link:hover {
+  color: var(--primary);
+}
+
+.seats-count {
+  font-weight: 700;
+}
+
+.loading-box {
+  padding: 80px 20px;
+}

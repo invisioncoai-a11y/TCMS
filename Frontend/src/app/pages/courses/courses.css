@@ -1,0 +1,161 @@
+.page-container {
+  padding-top: 40px;
+  padding-bottom: 60px;
+}
+
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.page-subtitle {
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.filter-card {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: #ffffff;
+}
+
+.filter-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.filter-group {
+  flex: 1;
+  min-width: 160px;
+}
+
+.flex-2 {
+  flex: 2;
+  min-width: 260px;
+}
+
+.action-group {
+  flex: 0 0 auto;
+  min-width: auto;
+}
+
+.results-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+.course-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.course-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.delivery-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.course-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.course-card-title a {
+  color: #0f172a;
+}
+
+.course-card-title a:hover {
+  color: var(--primary);
+}
+
+.course-card-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 18px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.course-card-meta {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 16px;
+}
+
+.meta-lbl {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text-light);
+  font-weight: 600;
+}
+
+.meta-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.meta-price {
+  font-size: 18px;
+  font-weight: 800;
+  color: #059669;
+}
+
+.course-card-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.empty-state {
+  padding: 60px 20px;
+}
+
+.empty-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.mt-3 {
+  margin-top: 16px;
+}

@@ -1,0 +1,98 @@
+.filter-card {
+  margin-bottom: 24px;
+  padding: 16px;
+}
+
+.trainers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 24px;
+}
+
+.trainer-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.trainer-card-header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.trainer-big-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.trainer-card-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.trainer-card-name a {
+  color: #0f172a;
+}
+
+.trainer-card-name a:hover {
+  color: var(--primary);
+}
+
+.trainer-details-body {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #334155;
+  margin-bottom: 16px;
+}
+
+.trainer-quals {
+  margin-bottom: 8px;
+}
+
+.trainer-bio-preview {
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.trainer-contacts {
+  padding: 12px 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.contact-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.contact-lbl {
+  color: var(--text-light);
+  font-weight: 600;
+}
+
+.contact-val {
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+.w-100 {
+  width: 100%;
+}

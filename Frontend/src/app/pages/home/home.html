@@ -1,0 +1,131 @@
+<div class="home-page">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container hero-content">
+      <div class="hero-text">
+        <span class="badge badge-primary hero-badge">Next-Generation Professional Learning</span>
+        <h1 class="hero-title">Elevate Your Career with Industry-Leading Enterprise Courses</h1>
+        <p class="hero-subtitle">
+          Master Oracle 19c administration, ASP.NET Core cloud backends, Angular frontends, and DevOps architectures with top certified instructors.
+        </p>
+        <div class="hero-actions">
+          <a routerLink="/courses" class="btn btn-primary">Browse All Courses &rarr;</a>
+          <a routerLink="/trainers" class="btn btn-outline">Meet Faculty</a>
+          <a routerLink="/my-registrations" class="btn btn-outline">Check Enrollments</a>
+        </div>
+      </div>
+      <div class="hero-card-preview card">
+        <h3 class="preview-title">Live Platform Metrics</h3>
+        <div class="metrics-grid" *ngIf="kpis">
+          <div class="metric-item">
+            <span class="metric-val text-primary">{{ kpis.totalCourses }}</span>
+            <span class="metric-lbl">Active Courses</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-val text-success">{{ kpis.totalOfferings }}</span>
+            <span class="metric-lbl">Class Offerings</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-val">{{ kpis.totalTrainers }}</span>
+            <span class="metric-lbl">Instructors</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-val text-primary">{{ kpis.totalRegistrations }}</span>
+            <span class="metric-lbl">Enrollments</span>
+          </div>
+        </div>
+        <div class="preview-badge">
+          <span class="badge badge-success">● Oracle 19c Connected</span>
+          <span class="badge badge-primary">PDB: FINALPDB</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Courses -->
+  <section class="container section">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Featured Masterclasses</h2>
+        <p class="section-subtitle">Specially curated enterprise technical training tracks</p>
+      </div>
+      <a routerLink="/courses" class="see-all-link">View All Courses &rarr;</a>
+    </div>
+
+    <div class="courses-grid" *ngIf="!loading && featuredCourses.length > 0; else loadingTpl">
+      <div class="course-card card card-hover" *ngFor="let c of featuredCourses">
+        <div class="course-card-top">
+          <span class="badge badge-primary">{{ c.categoryName }}</span>
+          <span class="delivery-badge">{{ c.deliveryMode }}</span>
+        </div>
+        <h3 class="course-card-title">
+          <a [routerLink]="['/courses', c.courseID]">{{ c.courseName }}</a>
+        </h3>
+        <p class="course-card-desc">{{ c.description }}</p>
+        <div class="course-card-meta">
+          <div class="meta-item">
+            <span class="meta-lbl">Duration</span>
+            <span class="meta-val">{{ c.duration }} Hours</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-lbl">Tuition</span>
+            <span class="meta-price">${{ c.price | number:'1.2-2' }}</span>
+          </div>
+        </div>
+        <div class="course-card-footer">
+          <a [routerLink]="['/courses', c.courseID]" class="btn btn-outline btn-sm">Syllabus</a>
+          <a [routerLink]="['/courses', c.courseID]" class="btn btn-primary btn-sm">View Schedule &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Courses & Faculty Spotlight -->
+  <section class="container section alt-section">
+    <div class="two-col-grid">
+      <!-- Popular Courses Ranking -->
+      <div class="col-box card">
+        <h3 class="box-title">Most Enrolled Courses</h3>
+        <p class="box-subtitle">Ranked by total trainee enrollment</p>
+        <div class="popular-list" *ngIf="popularCourses.length > 0">
+          <div class="popular-item" *ngFor="let p of popularCourses; let idx = index">
+            <span class="rank-badge">{{ idx + 1 }}</span>
+            <div class="popular-info">
+              <a [routerLink]="['/courses', p.courseID]" class="popular-name">{{ p.courseName }}</a>
+              <span class="popular-meta">{{ p.categoryName }} &bull; ${{ p.price }} &bull; {{ p.duration }}h</span>
+            </div>
+            <span class="badge badge-success">{{ p.totalEnrollments }} Enrolled</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expert Trainers Spotlight -->
+      <div class="col-box card">
+        <div class="box-header">
+          <div>
+            <h3 class="box-title">Certified Instructors</h3>
+            <p class="box-subtitle">Learn from industry veterans &amp; authors</p>
+          </div>
+          <a routerLink="/trainers" class="btn btn-outline btn-sm">All Faculty</a>
+        </div>
+        <div class="trainers-list" *ngIf="trainers.length > 0">
+          <div class="trainer-item" *ngFor="let t of trainers">
+            <div class="trainer-avatar">{{ t.fullName.charAt(0) }}</div>
+            <div class="trainer-info">
+              <a [routerLink]="['/trainers', t.trainerID]" class="trainer-name">{{ t.fullName }}</a>
+              <span class="trainer-spec">{{ t.specialization }}</span>
+              <span class="trainer-email">{{ t.email }}</span>
+            </div>
+            <a [routerLink]="['/trainers', t.trainerID]" class="btn btn-outline btn-sm">Profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <ng-template #loadingTpl>
+    <div class="loading-box text-center">
+      <p class="text-muted">Loading courses and instructor data from Oracle 19c database...</p>
+    </div>
+  </ng-template>
+</div>

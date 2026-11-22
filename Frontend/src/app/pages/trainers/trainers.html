@@ -1,0 +1,66 @@
+<div class="container page-container">
+  <div class="page-header">
+    <h1 class="page-title">Faculty &amp; Instructors</h1>
+    <p class="page-subtitle">Learn from certified enterprise specialists, consultants, and authors</p>
+  </div>
+
+  <!-- Search Toolbar -->
+  <div class="card filter-card">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+        placeholder="Search instructors by name, specialization, or expertise..."
+        class="form-control"
+      />
+    </div>
+  </div>
+
+  <div class="trainers-grid" *ngIf="!loading && trainers.length > 0; else noTrainersTpl">
+    <div class="trainer-card card card-hover" *ngFor="let t of trainers">
+      <div class="trainer-card-header">
+        <div class="trainer-big-avatar">{{ t.fullName.charAt(0) }}</div>
+        <div>
+          <h3 class="trainer-card-name">
+            <a [routerLink]="['/trainers', t.trainerID]">{{ t.fullName }}</a>
+          </h3>
+          <span class="badge badge-primary">{{ t.specialization }}</span>
+        </div>
+      </div>
+
+      <div class="trainer-details-body">
+        <p class="trainer-quals" *ngIf="t.qualifications">
+          <strong>Credentials:</strong> {{ t.qualifications }}
+        </p>
+        <p class="trainer-bio-preview" *ngIf="t.profileDetails">
+          {{ t.profileDetails }}
+        </p>
+      </div>
+
+      <div class="trainer-contacts">
+        <div class="contact-item">
+          <span class="contact-lbl">Email:</span>
+          <span class="contact-val">{{ t.email }}</span>
+        </div>
+        <div class="contact-item" *ngIf="t.phoneNumber">
+          <span class="contact-lbl">Phone:</span>
+          <span class="contact-val">{{ t.phoneNumber }}</span>
+        </div>
+      </div>
+
+      <div class="trainer-card-footer">
+        <a [routerLink]="['/trainers', t.trainerID]" class="btn btn-primary btn-sm w-100">
+          View Complete Profile &amp; Courses &rarr;
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noTrainersTpl>
+    <div class="card text-center empty-state" *ngIf="!loading">
+      <h3 class="empty-title">No Trainers Found</h3>
+      <p class="text-muted">No instructors matched your search criteria.</p>
+    </div>
+  </ng-template>
+</div>

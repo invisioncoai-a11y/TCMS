@@ -1,0 +1,102 @@
+<div class="container page-container">
+  <div class="page-header">
+    <h1 class="page-title">Course Catalog</h1>
+    <p class="page-subtitle">Explore accredited technical training courses, certifications, and masterclasses</p>
+  </div>
+
+  <!-- Filter & Search Toolbar -->
+  <div class="card filter-card">
+    <div class="filter-row">
+      <div class="filter-group flex-2">
+        <label class="form-label">Search Courses</label>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="onFilter()"
+          placeholder="Search by title, topics, or keywords..."
+          class="form-control"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label class="form-label">Category</label>
+        <select [(ngModel)]="selectedCategory" (change)="onFilter()" class="form-control">
+          <option value="">All Categories</option>
+          <option *ngFor="let cat of categories" [value]="cat.categoryID">{{ cat.categoryName }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="form-label">Delivery Mode</label>
+        <select [(ngModel)]="selectedDeliveryMode" (change)="onFilter()" class="form-control">
+          <option value="">All Modes</option>
+          <option value="Online">Online</option>
+          <option value="In-Person">In-Person</option>
+          <option value="Hybrid">Hybrid</option>
+          <option value="Classroom">Classroom</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="form-label">Sort By</label>
+        <select [(ngModel)]="sortBy" (change)="onFilter()" class="form-control">
+          <option value="name_asc">Course Title (A-Z)</option>
+          <option value="price_asc">Tuition: Low to High</option>
+          <option value="price_desc">Tuition: High to Low</option>
+          <option value="duration_desc">Duration (Longest)</option>
+          <option value="newest">Recently Added</option>
+        </select>
+      </div>
+
+      <div class="filter-group action-group">
+        <label class="form-label">&nbsp;</label>
+        <button (click)="resetFilters()" class="btn btn-outline">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Count -->
+  <div class="results-meta">
+    <span class="results-count">Showing <strong>{{ courses.length }}</strong> course(s)</span>
+  </div>
+
+  <!-- Courses Grid -->
+  <div class="courses-grid" *ngIf="!loading && courses.length > 0; else noResultsTpl">
+    <div class="course-card card card-hover" *ngFor="let c of courses">
+      <div class="course-card-top">
+        <span class="badge badge-primary">{{ c.categoryName }}</span>
+        <span class="delivery-badge">{{ c.deliveryMode }}</span>
+      </div>
+
+      <h3 class="course-card-title">
+        <a [routerLink]="['/courses', c.courseID]">{{ c.courseName }}</a>
+      </h3>
+
+      <p class="course-card-desc">{{ c.description }}</p>
+
+      <div class="course-card-meta">
+        <div class="meta-item">
+          <span class="meta-lbl">Duration</span>
+          <span class="meta-val">{{ c.duration }} Hours</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-lbl">Tuition Fee</span>
+          <span class="meta-price">${{ c.price | number:'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <div class="course-card-footer">
+        <a [routerLink]="['/courses', c.courseID]" class="btn btn-outline btn-sm">Syllabus &amp; Prereqs</a>
+        <a [routerLink]="['/courses', c.courseID]" class="btn btn-primary btn-sm">View Offerings &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noResultsTpl>
+    <div class="card text-center empty-state" *ngIf="!loading">
+      <h3 class="empty-title">No Courses Found</h3>
+      <p class="text-muted">No training courses match your current search and filter criteria.</p>
+      <button (click)="resetFilters()" class="btn btn-primary mt-3">Reset All Filters</button>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,81 @@
+<div class="container page-container" *ngIf="trainer; else loadingTpl">
+  <div class="breadcrumb-bar">
+    <a routerLink="/trainers">&larr; Back to Faculty Directory</a>
+  </div>
+
+  <div class="card trainer-hero-card">
+    <div class="trainer-header-row">
+      <div class="trainer-hero-avatar">{{ trainer.fullName.charAt(0) }}</div>
+      <div class="trainer-hero-info">
+        <span class="badge badge-primary spec-badge">{{ trainer.specialization }}</span>
+        <h1 class="trainer-hero-name">{{ trainer.fullName }}</h1>
+        <p class="trainer-hero-quals" *ngIf="trainer.qualifications">{{ trainer.qualifications }}</p>
+        <div class="contact-pills">
+          <span class="contact-pill">📧 {{ trainer.email }}</span>
+          <span class="contact-pill" *ngIf="trainer.phoneNumber">📞 {{ trainer.phoneNumber }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bio-section" *ngIf="trainer.profileDetails">
+      <h3 class="bio-title">Professional Biography &amp; Publications</h3>
+      <p class="bio-text">{{ trainer.profileDetails }}</p>
+    </div>
+  </div>
+
+  <!-- Assigned Course Offerings -->
+  <div class="card">
+    <h3 class="section-card-title">Assigned Courses &amp; Scheduled Cohorts</h3>
+    <p class="text-muted text-sm">Courses currently instructed or authored by {{ trainer.fullName }}</p>
+
+    <div class="table-responsive mt-3" *ngIf="assignedCourses.length > 0; else noAssignedTpl">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Course Title</th>
+            <th>Cohort Schedule</th>
+            <th>Start Date - End Date</th>
+            <th>Tuition</th>
+            <th>Available Seats</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of assignedCourses">
+            <td>
+              <a [routerLink]="['/courses', c.courseID]" class="font-bold course-link">
+                {{ c.courseName }}
+              </a>
+            </td>
+            <td>{{ c.scheduleDetails || 'Flexible Schedule' }}</td>
+            <td>
+              <div>{{ c.startDate | date:'mediumDate' }}</div>
+              <div class="text-muted text-sm">to {{ c.endDate | date:'mediumDate' }}</div>
+            </td>
+            <td class="font-bold text-success">${{ c.price | number:'1.2-2' }}</td>
+            <td>
+              <span class="badge badge-primary">{{ c.availableSeats }} / {{ c.maxCapacity }} Seats</span>
+            </td>
+            <td>
+              <a [routerLink]="['/register', c.offeringID]" class="btn btn-primary btn-sm">
+                Enroll in Cohort
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noAssignedTpl>
+      <div class="empty-state text-center">
+        <p class="text-muted">No upcoming cohorts currently assigned to this instructor.</p>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="container text-center loading-box">
+    <p class="text-muted">Loading trainer profile from Oracle 19c database...</p>
+  </div>
+</ng-template>

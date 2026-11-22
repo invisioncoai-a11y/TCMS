@@ -1,0 +1,180 @@
+<div class="container page-container">
+  <div class="page-header">
+    <h1 class="page-title">Course Enrollment</h1>
+    <p class="page-subtitle">Register for scheduled cohort offerings and secure your certified attendance</p>
+  </div>
+
+  <div class="enrollment-layout">
+    <!-- Enrollment Form -->
+    <div class="form-column">
+      <div class="card" *ngIf="!registrationId; else successTpl">
+        <h3 class="form-title">Trainee Registration Details</h3>
+        <p class="text-muted text-sm mb-4">Please provide your student contact information and educational background.</p>
+
+        <!-- Alerts -->
+        <div class="alert alert-danger" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <form (ngSubmit)="onSubmit()">
+          <!-- Offering Select if not hardcoded -->
+          <div class="form-group" *ngIf="upcomingOfferings.length > 0">
+            <label class="form-label">Select Scheduled Course Cohort *</label>
+            <select
+              [(ngModel)]="form.offeringID"
+              name="offeringID"
+              (change)="onOfferingChange()"
+              class="form-control"
+              required
+            >
+              <option *ngFor="let off of upcomingOfferings" [value]="off.offeringID">
+                {{ off.courseName }} &mdash; {{ off.startDate | date:'shortDate' }} ({{ off.availableSeats }} seats left)
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input
+              type="text"
+              [(ngModel)]="form.fullName"
+              name="fullName"
+              placeholder="e.g. John Doe"
+              class="form-control"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <input
+              type="email"
+              [(ngModel)]="form.email"
+              name="email"
+              placeholder="e.g. john.doe@example.com"
+              class="form-control"
+              required
+            />
+            <span class="text-muted text-sm">Used for registration lookup and schedule notifications</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Phone Number *</label>
+            <input
+              type="tel"
+              [(ngModel)]="form.phoneNumber"
+              name="phoneNumber"
+              placeholder="e.g. +1-555-0199"
+              class="form-control"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Educational &amp; Professional Background *</label>
+            <textarea
+              [(ngModel)]="form.educationalBackground"
+              name="educationalBackground"
+              rows="3"
+              placeholder="e.g. B.Sc. in Computer Science, 3 years Software Engineer..."
+              class="form-control"
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button
+              type="submit"
+              class="btn btn-primary btn-lg w-100"
+              [disabled]="submitting || (offering && offering.availableSeats <= 0)"
+            >
+              {{ submitting ? 'Processing Enrollment...' : 'Confirm Enrollment &amp; Reserve Seat' }}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Success Confirmation Template -->
+      <ng-template #successTpl>
+        <div class="card success-card text-center">
+          <div class="success-icon">✓</div>
+          <h2 class="success-title">Enrollment Confirmed!</h2>
+          <p class="success-desc">{{ successMessage }}</p>
+
+          <div class="confirmation-box">
+            <div class="conf-item">
+              <span class="conf-lbl">Official Registration ID:</span>
+              <span class="conf-val text-primary font-bold">#{{ registrationId }}</span>
+            </div>
+            <div class="conf-item">
+              <span class="conf-lbl">Trainee Name:</span>
+              <span class="conf-val">{{ form.fullName }}</span>
+            </div>
+            <div class="conf-item">
+              <span class="conf-lbl">Registered Email:</span>
+              <span class="conf-val">{{ form.email }}</span>
+            </div>
+          </div>
+
+          <div class="success-actions">
+            <a routerLink="/my-registrations" [queryParams]="{email: form.email}" class="btn btn-primary">
+              View in My Registrations &rarr;
+            </a>
+            <a routerLink="/courses" class="btn btn-outline">Browse More Courses</a>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Cohort Summary Sidebar -->
+    <div class="summary-column" *ngIf="offering">
+      <div class="card summary-card">
+        <h3 class="summary-title">Selected Cohort Summary</h3>
+
+        <div class="summary-course">
+          <span class="badge badge-primary">{{ offering.categoryName }}</span>
+          <h4 class="s-course-title">{{ offering.courseName }}</h4>
+        </div>
+
+        <div class="s-meta-list">
+          <div class="s-meta-row">
+            <span class="s-meta-lbl">Instructor</span>
+            <span class="s-meta-val font-bold">{{ offering.trainerName }}</span>
+          </div>
+          <div class="s-meta-row">
+            <span class="s-meta-lbl">Schedule</span>
+            <span class="s-meta-val">{{ offering.scheduleDetails }}</span>
+          </div>
+          <div class="s-meta-row">
+            <span class="s-meta-lbl">Start Date</span>
+            <span class="s-meta-val">{{ offering.startDate | date:'mediumDate' }}</span>
+          </div>
+          <div class="s-meta-row">
+            <span class="s-meta-lbl">End Date</span>
+            <span class="s-meta-val">{{ offering.endDate | date:'mediumDate' }}</span>
+          </div>
+          <div class="s-meta-row">
+            <span class="s-meta-lbl">Delivery Mode</span>
+            <span class="s-meta-val">{{ offering.deliveryMode }}</span>
+          </div>
+          <div class="s-meta-row">
+            <span class="s-meta-lbl">Available Seats</span>
+            <span class="s-meta-val font-bold text-success">{{ offering.availableSeats }} / {{ offering.maxCapacity }}</span>
+          </div>
+        </div>
+
+        <div class="s-price-box">
+          <span class="s-price-lbl">Tuition Fee</span>
+          <span class="s-price-val">${{ offering.price | number:'1.2-2' }}</span>
+        </div>
+
+        <div class="alert alert-warning text-sm" *ngIf="offering.availableSeats <= 3 && offering.availableSeats > 0">
+          ⚠️ Only {{ offering.availableSeats }} seat(s) remaining for this cohort!
+        </div>
+        <div class="alert alert-danger text-sm" *ngIf="offering.availableSeats === 0">
+          ❌ This class offering is completely sold out.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

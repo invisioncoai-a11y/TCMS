@@ -1,0 +1,135 @@
+<div class="container page-container" *ngIf="course; else loadingTpl">
+  <!-- Breadcrumbs & Back -->
+  <div class="breadcrumb-bar">
+    <a routerLink="/courses">&larr; Back to Courses Catalog</a>
+  </div>
+
+  <!-- Course Header Banner -->
+  <div class="card header-banner">
+    <div class="banner-top">
+      <span class="badge badge-primary">{{ course.categoryName }}</span>
+      <span class="delivery-pill">{{ course.deliveryMode }}</span>
+      <span class="featured-badge" *ngIf="course.isFeatured === 1">★ Featured</span>
+    </div>
+    <h1 class="course-title">{{ course.courseName }}</h1>
+    <p class="course-intro">{{ course.description }}</p>
+
+    <div class="banner-stats">
+      <div class="b-stat">
+        <span class="b-stat-lbl">Tuition Fee</span>
+        <span class="b-stat-val price-val">${{ course.price | number:'1.2-2' }}</span>
+      </div>
+      <div class="b-stat">
+        <span class="b-stat-lbl">Duration</span>
+        <span class="b-stat-val">{{ course.duration }} Instructional Hours</span>
+      </div>
+      <div class="b-stat">
+        <span class="b-stat-lbl">Delivery Channel</span>
+        <span class="b-stat-val">{{ course.deliveryMode }}</span>
+      </div>
+      <div class="b-stat">
+        <span class="b-stat-lbl">Scheduled Offerings</span>
+        <span class="b-stat-val">{{ offerings.length }} Class(es)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Grid: Syllabus + Scheduled Offerings -->
+  <div class="syllabus-grid">
+    <div class="syllabus-main">
+      <!-- Learning Objectives -->
+      <div class="card mb-4" *ngIf="course.learningObjectives">
+        <h3 class="section-card-title">Learning Objectives &amp; Competencies</h3>
+        <p class="text-content">{{ course.learningObjectives }}</p>
+      </div>
+
+      <!-- Prerequisites -->
+      <div class="card mb-4" *ngIf="course.prerequisites">
+        <h3 class="section-card-title">Course Prerequisites</h3>
+        <p class="text-content">{{ course.prerequisites }}</p>
+      </div>
+
+      <!-- Scheduled Course Offerings -->
+      <div class="card">
+        <div class="offering-header">
+          <div>
+            <h3 class="section-card-title">Scheduled Class Offerings &amp; Cohorts</h3>
+            <p class="text-muted text-sm">Select an upcoming offering to register and secure your seat</p>
+          </div>
+        </div>
+
+        <div class="table-responsive" *ngIf="offerings.length > 0; else noOfferingsTpl">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Cohort / Schedule</th>
+                <th>Instructor</th>
+                <th>Start - End Date</th>
+                <th>Available Seats</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let off of offerings">
+                <td>
+                  <strong>Offering #{{ off.offeringID }}</strong>
+                  <div class="text-muted text-sm">{{ off.scheduleDetails }}</div>
+                </td>
+                <td>
+                  <a [routerLink]="['/trainers', off.trainerID]" class="trainer-link font-medium">
+                    {{ off.trainerName }}
+                  </a>
+                  <div class="text-muted text-sm">{{ off.trainerSpecialization }}</div>
+                </td>
+                <td>
+                  <div>{{ off.startDate | date:'mediumDate' }}</div>
+                  <div class="text-muted text-sm">to {{ off.endDate | date:'mediumDate' }}</div>
+                </td>
+                <td>
+                  <span class="seats-count">{{ off.availableSeats }} / {{ off.maxCapacity }}</span>
+                </td>
+                <td>
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                      'badge-success': off.availableSeats > 3,
+                      'badge-warning': off.availableSeats > 0 && off.availableSeats <= 3,
+                      'badge-danger': off.availableSeats === 0
+                    }"
+                  >
+                    {{ off.availableSeats === 0 ? 'Sold Out' : off.availableSeats <= 3 ? 'Almost Full' : 'Available' }}
+                  </span>
+                </td>
+                <td>
+                  <a
+                    *ngIf="off.availableSeats > 0"
+                    [routerLink]="['/register', off.offeringID]"
+                    class="btn btn-primary btn-sm"
+                  >
+                    Enroll Now
+                  </a>
+                  <button *ngIf="off.availableSeats === 0" class="btn btn-outline btn-sm" disabled>
+                    Fully Booked
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ng-template #noOfferingsTpl>
+          <div class="empty-state text-center">
+            <p class="text-muted">There are currently no active cohorts scheduled for this course.</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="container text-center loading-box">
+    <p class="text-muted">Loading syllabus and cohort offerings from Oracle database...</p>
+  </div>
+</ng-template>
