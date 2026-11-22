@@ -1,3 +1,3 @@
 # TCMS
-Training Courses Management System
+Training Courses Management System.
 
